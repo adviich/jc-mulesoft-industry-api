@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<http:listener-config name="jc-industry-eapi-httpListenerConfig">
+        <http:listener-connection host="${host}" port="${https.port}" readTimeout="${readTimeout}" protocol="HTTPS">
+			<tls:context >
+				<tls:trust-store path="${clientTruststore.path}" password="${secure::clientTruststore.password}" type="pkcs12" />
+				<tls:key-store type="pkcs12" path="${serverKeys.path}" keyPassword="${secure::serverKeys.keypass}" password="${secure::serverKeys.password}" />
+			</tls:context>
+		</http:listener-connection>
+    </http:listener-config>
+    <apikit:config name="jc-industry-eapi-config" api="resource::a9201017-35a3-422a-b8ca-2e7af0f56254:jc-industry-eapi:1.0.0:raml:zip:jc-industry-eapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <api-gateway:autodiscovery apiId="19104331" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="6d1b060a-c3a1-4452-83cc-e062f6dfdfdc" flowRef="jc-industry-eapi-main" />
+	<global-property doc:name="Global Property" doc:id="17300d13-d2b7-4ac5-90aa-07d6434f942d" name="env" value="sandbox" />
+	<global-property doc:name="Global Property" doc:id="8e1345f3-a7cf-44f9-b468-51a7bad71e68" name="key" value="mulesoft12345678" />
+	<configuration-properties doc:name="Configuration properties" doc:id="d3564dd8-33a9-41a7-a828-c1d573acbc10" file="common-properties.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="e48e2261-afdf-495a-9f57-3775f80afd55" file="${env}-secure-properties.yaml" key="${key}" />
+	<configuration-properties doc:name="Configuration properties" doc:id="c0d3395b-4a7b-4eb1-88ca-dd8a4fa85386" file="${env}-properties.yaml" />
+</mule>

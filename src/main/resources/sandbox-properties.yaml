@@ -1,0 +1,7 @@
+apiId : "19104331"
+
+serverKeys: 
+  path: "serverkeys/server_comb_cert.p12"
+
+clientTruststore:
+  path: "clientKeys/client-truststore.pkcs12"
